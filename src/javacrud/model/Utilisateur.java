@@ -34,6 +34,11 @@ public class Utilisateur {
             this.utPhrase = encoder.encode(utMp);
         }
     }
+    
+    public void connexion(String username, String mdp ){
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder (BCryptPasswordEncoder.BCryptVersion.$2A, 12);
+        
+    }
 
     public Utilisateur() {
     }

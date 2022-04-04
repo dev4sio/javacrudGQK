@@ -94,7 +94,19 @@ public class UtilisateurDAOImp implements UtilDAO {
 
     @Override
     public Utilisateur get(String pseudo) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        try {
+            Connection con = UtilDB.getConnect();
+            String sql = "SELECT (ut_pseudo, ut_nom, ut_prenom, ut_mp, ut_mail, ut_phrase, ut_adr1, ut_adr2, ut_cdpost, ut_numpost) FROM utilisateur WHERE ut_pseudo = ?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, pseudo);
+            ps.executeUpdate();
+            JOptionPane.showMessageDialog(null, "DB : Utilisateur trouvé ! ");
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "DB : Erreur, Utilisataeur introuvable");
+        }
+        
+        return; 
     }
 
     @Override
