@@ -14,6 +14,7 @@ import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 /**
  *
@@ -99,15 +100,40 @@ public class UtilisateurDAOImp implements UtilDAO {
             String sql = "SELECT (ut_pseudo, ut_nom, ut_prenom, ut_mp, ut_mail, ut_phrase, ut_adr1, ut_adr2, ut_cdpost, ut_numpost) FROM utilisateur WHERE ut_pseudo = ?";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, pseudo);
-            ps.executeUpdate();
+            ResultSet rs = ps.executeQuery();
+            
             JOptionPane.showMessageDialog(null, "DB : Utilisateur trouvé ! ");
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "DB : Erreur, Utilisataeur introuvable");
         }
         
-        return; 
+        return null; 
     }
+    public boolean connexion(String pseudo, String password) {
+        boolean userNpassMatch = false;
+        BCryptPasswordEncoder bcrypt = new BCryptPasswordEncoder (BCryptPasswordEncoder.BCryptVersion.$2A, 12);
+        try {
+            Connection con = UtilDB.getConnect();
+            String sql = "SELECT * FROM utilisateur WHERE ut_pseudo = ?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, pseudo);
+            ResultSet rs = ps.executeQuery();
+            JOptionPane.showMessageDialog(null, "DB : Utilisateur trouvé");
+            if(bcrypt.matches(password, rs.getString("ut_phrase"))){
+                userNpassMatch = true;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "DB : Erreur, Utilisateur introuvable");
+        }
+        
+
+
+        
+        return userNpassMatch;
+    }
+    
 
     @Override
     public TreeMap<String, Utilisateur> list() {

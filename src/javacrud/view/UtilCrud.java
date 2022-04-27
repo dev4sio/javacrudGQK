@@ -576,7 +576,7 @@ public class UtilCrud extends javax.swing.JFrame {
 
     private void MailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_MailMouseClicked
 
-            new Mail(uiMail.getText()).setVisible(true);
+            new MailBox().setVisible(true);
         
     }//GEN-LAST:event_MailMouseClicked
 
