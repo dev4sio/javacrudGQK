@@ -119,7 +119,8 @@ public class UtilisateurDAOImp implements UtilDAO {
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, pseudo);
             ResultSet rs = ps.executeQuery();
-            JOptionPane.showMessageDialog(null, "DB : Utilisateur trouvé");
+            rs.next();
+            JOptionPane.showMessageDialog(null, "DB : Utilisateur trouvé :");
             if(bcrypt.matches(password, rs.getString("ut_phrase"))){
                 userNpassMatch = true;
             }

@@ -4,6 +4,9 @@
  */
 package javacrud.view;
 import javacrud.view.Mail;
+import java.io.*;
+import java.util.*;
+import javax.mail.*;
 
 
 /**
@@ -11,6 +14,11 @@ import javacrud.view.Mail;
  * @author Guilhem
  */
 public class MailBox extends javax.swing.JFrame {
+    
+    
+  private static final String HOST = "pop.gmail.com";
+  private static final String USERNAME = "myemail@gmail.com";
+  private static final String PASSWORD = "******";
 
     /**
      * Creates new form MailBox
@@ -177,6 +185,8 @@ public class MailBox extends javax.swing.JFrame {
             }
         });
     }
+    
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton jButtonEnvoyerMail;

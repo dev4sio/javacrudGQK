@@ -37,19 +37,22 @@ public class Login extends javax.swing.JFrame {
         jButtonConnexion = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMaximumSize(new java.awt.Dimension(480, 300));
+        setMinimumSize(new java.awt.Dimension(480, 300));
+        setSize(new java.awt.Dimension(380, 400));
         getContentPane().setLayout(null);
 
         jLabel1.setText("Pseudo");
         getContentPane().add(jLabel1);
         jLabel1.setBounds(110, 50, 70, 20);
         getContentPane().add(jTextFieldPseudo);
-        jTextFieldPseudo.setBounds(110, 70, 230, 22);
+        jTextFieldPseudo.setBounds(110, 70, 230, 30);
 
         jLabel2.setText("Mot de passe");
         getContentPane().add(jLabel2);
         jLabel2.setBounds(110, 110, 90, 20);
         getContentPane().add(jTextFieldMDP);
-        jTextFieldMDP.setBounds(110, 130, 230, 22);
+        jTextFieldMDP.setBounds(110, 130, 230, 30);
 
         jButtonQuitter.setText("Quitter");
         getContentPane().add(jButtonQuitter);
@@ -70,6 +73,8 @@ public class Login extends javax.swing.JFrame {
     private void jButtonConnexionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonConnexionMouseClicked
         if(new UtilisateurDAOImp().connexion(jTextFieldPseudo.getText(), jTextFieldMDP.getText())){
             JOptionPane.showMessageDialog(null, "Connexion réussie");
+            new UtilCrud().setVisible(true);
+            this.setVisible(false);
         }else{
             JOptionPane.showMessageDialog(null, "échec de connexion");
         }

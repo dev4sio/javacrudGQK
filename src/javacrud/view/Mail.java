@@ -25,6 +25,7 @@ public class Mail extends javax.swing.JFrame {
 	/**
 	 * Creates new form mail
 	 *
+     * @param destinatiare
 	 * @param destinataire
 	 */
 	public Mail(String destinataire) {
