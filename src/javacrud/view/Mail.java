@@ -11,6 +11,7 @@ package javacrud.view;
  */
 import java.util.Properties;
 import java.util.Date;
+import javax.mail.Authenticator;
 import javax.mail.Session;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Message;
@@ -22,6 +23,10 @@ import javax.mail.internet.MimeMessage;
 // https://www.journaldev.com/2532/javamail-example-send-mail-in-java-smtp
 public class Mail extends javax.swing.JFrame {
 
+    
+        public static final String USERNAME = "romain.bessede@st2msi.net";
+        public static final String PASSWORD = "JpQ41_11;,kH";
+    
 	/**
 	 * Creates new form mail
 	 *
@@ -33,6 +38,28 @@ public class Mail extends javax.swing.JFrame {
 		//Entete.setBackground(new java.awt.Color(0,128,255,30));
 		jScrollPane1.getViewport().setBackground(new java.awt.Color(255, 255, 255,100));
 		uiMail.setText(destinataire);
+                
+            //Lire Mail Pop
+            Properties props = new Properties();
+            props.put("mail.store.protocol", "pop3");
+            props.put("mail.pop3.host", "mail.st2msi.net");
+            props.put("mail.pop3.port", "995");
+            //props.put("mail.smtp.auth", "true");
+            props.put("mail.pop3.socketFactory.port", "995");
+            props.put("mail.pop3.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
+
+            props.put("mail.pop3.user", USERNAME);
+            //props.put("mail.pop3.socketFactory.fallback", "false");
+            //props.put("mail.pop3.ssl.protocols", "TLSv1.2");
+            
+            Session session = Session.getInstance(props, new Authenticator() {
+                protected PasswordAuthentication getPassordAuthentification(){
+                    return new PasswordAuthentication(USERNAME, PASSWORD);
+                }
+            });
+            
+            
+            
 
 	}
 

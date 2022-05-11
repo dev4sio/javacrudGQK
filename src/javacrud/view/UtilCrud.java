@@ -76,11 +76,12 @@ public class UtilCrud extends javax.swing.JFrame {
         tbUtilisateur = new javax.swing.JTable();
         jPanelBt = new javax.swing.JPanel();
         message = new javax.swing.JLabel();
-        Mail = new javax.swing.JButton();
+        buttonEnvoyerMail = new javax.swing.JButton();
         AuSujet = new javax.swing.JButton();
         Aide = new javax.swing.JButton();
         Quitter = new javax.swing.JButton();
         Parametre = new javax.swing.JButton();
+        buttonBoiteMail = new javax.swing.JButton();
         Entete = new javax.swing.JLabel();
         background = new javax.swing.JLabel();
 
@@ -344,16 +345,16 @@ public class UtilCrud extends javax.swing.JFrame {
 
         message.setText("Message");
 
-        Mail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ressource/envelope_20.png"))); // NOI18N
-        Mail.setText("Mail");
-        Mail.addMouseListener(new java.awt.event.MouseAdapter() {
+        buttonEnvoyerMail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ressource/envelope_20.png"))); // NOI18N
+        buttonEnvoyerMail.setText("Envoyer Mail");
+        buttonEnvoyerMail.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                MailMouseClicked(evt);
+                buttonEnvoyerMailMouseClicked(evt);
             }
         });
-        Mail.addActionListener(new java.awt.event.ActionListener() {
+        buttonEnvoyerMail.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                MailActionPerformed(evt);
+                buttonEnvoyerMailActionPerformed(evt);
             }
         });
 
@@ -384,6 +385,19 @@ public class UtilCrud extends javax.swing.JFrame {
             }
         });
 
+        buttonBoiteMail.setIcon(new javax.swing.ImageIcon(getClass().getResource("/ressource/envelope_20.png"))); // NOI18N
+        buttonBoiteMail.setText("Boite Mail");
+        buttonBoiteMail.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                buttonBoiteMailMouseClicked(evt);
+            }
+        });
+        buttonBoiteMail.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                buttonBoiteMailActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanelBtLayout = new javax.swing.GroupLayout(jPanelBt);
         jPanelBt.setLayout(jPanelBtLayout);
         jPanelBtLayout.setHorizontalGroup(
@@ -391,19 +405,23 @@ public class UtilCrud extends javax.swing.JFrame {
             .addGroup(jPanelBtLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(Parametre)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 423, Short.MAX_VALUE)
-                .addComponent(Mail)
-                .addGap(18, 18, 18)
-                .addComponent(AuSujet)
-                .addGap(18, 18, 18)
-                .addComponent(Aide)
-                .addGap(18, 18, 18)
-                .addComponent(Quitter)
-                .addGap(30, 30, 30))
-            .addGroup(jPanelBtLayout.createSequentialGroup()
-                .addGap(249, 249, 249)
-                .addComponent(message)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGap(130, 130, 130)
+                .addGroup(jPanelBtLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanelBtLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 78, Short.MAX_VALUE)
+                        .addComponent(buttonBoiteMail, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(buttonEnvoyerMail, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(AuSujet)
+                        .addGap(18, 18, 18)
+                        .addComponent(Aide)
+                        .addGap(18, 18, 18)
+                        .addComponent(Quitter)
+                        .addGap(30, 30, 30))
+                    .addGroup(jPanelBtLayout.createSequentialGroup()
+                        .addComponent(message)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
         );
         jPanelBtLayout.setVerticalGroup(
             jPanelBtLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -412,10 +430,11 @@ public class UtilCrud extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 10, Short.MAX_VALUE)
                 .addGroup(jPanelBtLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(Parametre)
-                    .addComponent(Mail)
+                    .addComponent(buttonEnvoyerMail)
                     .addComponent(AuSujet)
                     .addComponent(Aide)
-                    .addComponent(Quitter))
+                    .addComponent(Quitter)
+                    .addComponent(buttonBoiteMail))
                 .addGap(18, 18, 18))
         );
 
@@ -442,9 +461,9 @@ public class UtilCrud extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_uiCodePostActionPerformed
 
-    private void MailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_MailActionPerformed
+    private void buttonEnvoyerMailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonEnvoyerMailActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_MailActionPerformed
+    }//GEN-LAST:event_buttonEnvoyerMailActionPerformed
 
     private void QuitterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_QuitterActionPerformed
         // TODO add your handling code here:
@@ -574,11 +593,22 @@ public class UtilCrud extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_ParametreMouseClicked
 
-    private void MailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_MailMouseClicked
+    private void buttonEnvoyerMailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonEnvoyerMailMouseClicked
+        new Mail().setVisible(true);
+    }//GEN-LAST:event_buttonEnvoyerMailMouseClicked
 
+    private void buttonBoiteMailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonBoiteMailMouseClicked
+        try {
+            // TODO add your handling code here:
             new MailBox().setVisible(true);
-        
-    }//GEN-LAST:event_MailMouseClicked
+        } catch (Exception ex) {
+            Logger.getLogger(UtilCrud.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_buttonBoiteMailMouseClicked
+
+    private void buttonBoiteMailActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buttonBoiteMailActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_buttonBoiteMailActionPerformed
 
     private void chargerLesUtilisateurs() {
         lesUtilisateurs.clear();
@@ -683,13 +713,14 @@ public class UtilCrud extends javax.swing.JFrame {
     private javax.swing.JButton ChercherVille;
     private javax.swing.JButton Creer;
     private javax.swing.JLabel Entete;
-    private javax.swing.JButton Mail;
     private javax.swing.JButton Modifier;
     private javax.swing.JButton Nouveau;
     private javax.swing.JButton Parametre;
     private javax.swing.JButton Quitter;
     private javax.swing.JButton Supprimer;
     private javax.swing.JLabel background;
+    private javax.swing.JButton buttonBoiteMail;
+    private javax.swing.JButton buttonEnvoyerMail;
     private javax.swing.JLabel jLabelAdresse;
     private javax.swing.JLabel jLabelCodePost;
     private javax.swing.JLabel jLabelMDP;

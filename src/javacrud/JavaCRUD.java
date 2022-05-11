@@ -5,7 +5,7 @@
  */
 package javacrud;
 
-import javacrud.view.UtilCrud;
+import javacrud.view.Login;
 /**
  *
  * @author patrick
@@ -24,8 +24,8 @@ public class JavaCRUD {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        UtilCrud utilCrud = new UtilCrud();
-        utilCrud.setVisible(true);
+        Login login = new Login();
+        login.setVisible(true);
     }
 
 }
