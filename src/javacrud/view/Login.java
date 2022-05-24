@@ -56,7 +56,7 @@ public class Login extends javax.swing.JFrame {
 
         jButtonQuitter.setText("Quitter");
         getContentPane().add(jButtonQuitter);
-        jButtonQuitter.setBounds(50, 210, 72, 22);
+        jButtonQuitter.setBounds(50, 210, 110, 22);
 
         jButtonConnexion.setText("Connexion");
         jButtonConnexion.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -65,7 +65,7 @@ public class Login extends javax.swing.JFrame {
             }
         });
         getContentPane().add(jButtonConnexion);
-        jButtonConnexion.setBounds(310, 210, 90, 22);
+        jButtonConnexion.setBounds(310, 210, 120, 22);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -73,7 +73,8 @@ public class Login extends javax.swing.JFrame {
     private void jButtonConnexionMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jButtonConnexionMouseClicked
         if(new UtilisateurDAOImp().connexion(jTextFieldPseudo.getText(), jTextFieldMDP.getText())){
             JOptionPane.showMessageDialog(null, "Connexion réussie");
-            new UtilCrud().setVisible(true);
+            Utilisateur utilisateur = new UtilisateurDAOImp().get(jTextFieldPseudo.getText());
+            new UtilCrud(utilisateur).setVisible(true);
             this.setVisible(false);
         }else{
             JOptionPane.showMessageDialog(null, "échec de connexion");

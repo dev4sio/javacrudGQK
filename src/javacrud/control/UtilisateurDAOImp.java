@@ -95,20 +95,33 @@ public class UtilisateurDAOImp implements UtilDAO {
 
     @Override
     public Utilisateur get(String pseudo) {
+        Utilisateur ut = new Utilisateur();
         try {
             Connection con = UtilDB.getConnect();
-            String sql = "SELECT (ut_pseudo, ut_nom, ut_prenom, ut_mp, ut_mail, ut_phrase, ut_adr1, ut_adr2, ut_cdpost, ut_numpost) FROM utilisateur WHERE ut_pseudo = ?";
+            String sql = "SELECT ut_pseudo, ut_nom, ut_prenom, ut_mp, ut_mail, ut_phrase, ut_adr1, ut_adr2, ut_cdpost, ut_numpost FROM utilisateur WHERE ut_pseudo = ?";
             PreparedStatement ps = con.prepareStatement(sql);
             ps.setString(1, pseudo);
             ResultSet rs = ps.executeQuery();
-            
+            rs.next();
+            ut.setUtPseudo(rs.getString("ut_pseudo"));
+            ut.setUtNom(rs.getString("ut_nom"));
+            ut.setUtPrenom(rs.getString("ut_prenom"));
+            ut.setUtMp(rs.getString("ut_mp"));
+            ut.setUtMail(rs.getString("ut_mail"));
+            ut.setUtPhrase(rs.getString("ut_phrase"));
+            ut.setUtAdr1(rs.getString("ut_adr1"));
+            ut.setUtAdr2(rs.getString("ut_adr2"));
+            ut.setUtCdpost(rs.getString("ut_cdpost"));
+            ut.setUtNumpost(rs.getString("ut_numpost"));
+          
             JOptionPane.showMessageDialog(null, "DB : Utilisateur trouvé ! ");
+            
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "DB : Erreur, Utilisataeur introuvable");
         }
         
-        return null; 
+        return ut; 
     }
     public boolean connexion(String pseudo, String password) {
         boolean userNpassMatch = false;

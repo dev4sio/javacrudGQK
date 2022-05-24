@@ -5,14 +5,25 @@
 package javacrud.view;
 import javacrud.view.Mail;
 import java.io.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import javax.mail.*;
 
 import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javacrud.control.ConfigDAO;
+import javacrud.model.Configuration;
+import javacrud.model.MailModel;
+import javacrud.model.Utilisateur;
+import javacrud.tech.UtilDB;
 import javax.mail.*;
 import javax.mail.internet.*;
+import javax.swing.JOptionPane;
 
 
 /**
@@ -25,19 +36,26 @@ public class MailBox extends javax.swing.JFrame {
   private static final String HOST = "pop.gmail.com";
   private static final String USERNAME = "myemail@gmail.com";
   private static final String PASSWORD = "******";
+  private Utilisateur currentUser;
 
     /**
      * Creates new form MailBox
      */
   
     //Il faut metttre un try/catch à chaque instanciation d'objet
-    public MailBox() throws Exception{
+    public MailBox(Utilisateur ut) throws Exception{
+        
+        this.currentUser = ut; 
+        
         initComponents();
         
         // mail server connection parameters
-        String host = "mail.st2msi.net";
-        String user = "guilhem.gerbaud@st2msi.net";
-        String password = "JackWhite1998";
+        Configuration configMail = ConfigDAO.getConfiguration();
+        
+        
+        String host = configMail.getMailHost();
+        String user = configMail.getMailUser();
+        String password = configMail.getMailPass();
 
         // connect to my pop3 inbox
         Properties properties = System.getProperties();
@@ -51,6 +69,35 @@ public class MailBox extends javax.swing.JFrame {
         Message[] messages = inbox.getMessages();
         
         if (messages.length == 0) System.out.println("No messages found.");
+        
+        
+         
+        
+        try {
+            Connection con = UtilDB.getConnect();
+            for (int i = 0; i < messages.length; i++) {
+                String sql = "INSERT IGNORE INTO mail VALUES (?,?,?,?,?,?,?,?)";
+                PreparedStatement ps = con.prepareStatement(sql);
+                ps.setInt(1, messages[i].getMessageNumber());
+                ps.setString(2, currentUser.getUtPseudo());
+                //On veut que l'adresse et pas le reste
+                String[] mailAddrTab = messages[i].getFrom()[0].toString().split("<");
+                mailAddrTab = mailAddrTab[1].split(">");
+                String adresseMail = mailAddrTab[0];
+                ps.setString(3, adresseMail);
+                ps.setString(4, user);
+                ps.setString(5, messages[i].getSubject());
+                ps.setString(6, messages[i].getContent().toString());
+                DateFormat simple = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                ps.setString(7, simple.format(new Date(messages[i].getSentDate().getTime())));
+                ps.setString(8, "2021-10-12 09:17:45");
+                ps.executeUpdate();
+            }  
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "DB : FAIL INSERT DANS MAIL");
+        }
+    
 
         for (int i = 0; i < messages.length; i++) {
           // stop after listing ten messages
@@ -61,15 +108,29 @@ public class MailBox extends javax.swing.JFrame {
           }
 
           System.out.println("Message " + (i + 1));
-          System.out.println("From : " + messages[i].getFrom()[0]);
+          String[] mailAddrTab = messages[i].getFrom()[0].toString().split("<");
+          mailAddrTab = mailAddrTab[1].split(">");
+          String adresseMail = mailAddrTab[0];
+          System.out.println("From : " + adresseMail);
+          System.out.println("To : " + user);
           System.out.println("Subject : " + messages[i].getSubject());
-          System.out.println("Sent Date : " + messages[i].getSentDate());
-          System.out.println();
+          DateFormat simple = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+          System.out.println("Sent Date : " + simple.format(new Date(messages[i].getSentDate().getTime())));
+          System.out.println("Message Number : " + messages[i].getMessageNumber());
+          System.out.println(messages[i].getContent().toString());
+          
+          //MailModel mailModel = new MailModel(messages[i].getFrom()[0], Arrays.toString(messages[i].getReplyTo()), messages[i].getSubject(), );
+          
         }
 
         inbox.close(true);
         store.close();
     }
+
+    private MailBox() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
+
 
     /**
      * This method is called from within the constructor to initialize the form.

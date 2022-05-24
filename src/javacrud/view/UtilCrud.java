@@ -33,11 +33,18 @@ public class UtilCrud extends javax.swing.JFrame {
     String uiNumpost;
     private Object[] selectedVille;
     private Commune laVille;
+    private Utilisateur currentUser;
 
     public UtilCrud() {
         initComponents();
         message.setText("Veuillez choisir un utilisateur dans le tableau de droite ou saisir les données à creer");
         chargerLesUtilisateurs();
+    }
+    public UtilCrud(Utilisateur ut) {
+        initComponents();
+        message.setText("Veuillez choisir un utilisateur dans le tableau de droite ou saisir les données à creer");
+        chargerLesUtilisateurs();
+        this.currentUser = ut; 
     }
 
     /**
@@ -600,7 +607,7 @@ public class UtilCrud extends javax.swing.JFrame {
     private void buttonBoiteMailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_buttonBoiteMailMouseClicked
         try {
             // TODO add your handling code here:
-            new MailBox().setVisible(true);
+            new MailBox(this.currentUser).setVisible(true);
         } catch (Exception ex) {
             Logger.getLogger(UtilCrud.class.getName()).log(Level.SEVERE, null, ex);
         }
