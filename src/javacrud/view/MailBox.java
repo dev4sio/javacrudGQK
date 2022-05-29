@@ -17,6 +17,7 @@ import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javacrud.control.ConfigDAO;
+import javacrud.control.MailDAO;
 import javacrud.model.Configuration;
 import javacrud.model.MailModel;
 import javacrud.model.Utilisateur;
@@ -24,6 +25,7 @@ import javacrud.tech.UtilDB;
 import javax.mail.*;
 import javax.mail.internet.*;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 
 
 /**
@@ -37,7 +39,7 @@ public class MailBox extends javax.swing.JFrame {
   private static final String USERNAME = "myemail@gmail.com";
   private static final String PASSWORD = "******";
   private Utilisateur currentUser;
-
+  private List<MailModel> mailList;
     /**
      * Creates new form MailBox
      */
@@ -45,7 +47,8 @@ public class MailBox extends javax.swing.JFrame {
     //Il faut metttre un try/catch à chaque instanciation d'objet
     public MailBox(Utilisateur ut) throws Exception{
         
-        this.currentUser = ut; 
+        this.currentUser = ut;
+        
         
         initComponents();
         
@@ -72,59 +75,47 @@ public class MailBox extends javax.swing.JFrame {
         
         
          
-        
+        //Insertion des mails en base
         try {
             Connection con = UtilDB.getConnect();
             for (int i = 0; i < messages.length; i++) {
-                String sql = "INSERT IGNORE INTO mail VALUES (?,?,?,?,?,?,?,?)";
-                PreparedStatement ps = con.prepareStatement(sql);
-                ps.setInt(1, messages[i].getMessageNumber());
-                ps.setString(2, currentUser.getUtPseudo());
-                //On veut que l'adresse et pas le reste
-                String[] mailAddrTab = messages[i].getFrom()[0].toString().split("<");
-                mailAddrTab = mailAddrTab[1].split(">");
-                String adresseMail = mailAddrTab[0];
-                ps.setString(3, adresseMail);
-                ps.setString(4, user);
-                ps.setString(5, messages[i].getSubject());
-                ps.setString(6, messages[i].getContent().toString());
-                DateFormat simple = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                ps.setString(7, simple.format(new Date(messages[i].getSentDate().getTime())));
-                ps.setString(8, "2021-10-12 09:17:45");
-                ps.executeUpdate();
-            }  
+                new MailDAO().insert(messages[i], currentUser, user);
+            }
+            JOptionPane.showMessageDialog(null, "DB : INSERTION MAIL REUSSIE");
         } catch (Exception e) {
             e.printStackTrace();
             JOptionPane.showMessageDialog(null, "DB : FAIL INSERT DANS MAIL");
         }
-    
-
-        for (int i = 0; i < messages.length; i++) {
-          // stop after listing ten messages
-          if (i > 10) {
-            System.exit(0);
-            inbox.close(true);
-            store.close();
-          }
-
-          System.out.println("Message " + (i + 1));
-          String[] mailAddrTab = messages[i].getFrom()[0].toString().split("<");
-          mailAddrTab = mailAddrTab[1].split(">");
-          String adresseMail = mailAddrTab[0];
-          System.out.println("From : " + adresseMail);
-          System.out.println("To : " + user);
-          System.out.println("Subject : " + messages[i].getSubject());
-          DateFormat simple = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-          System.out.println("Sent Date : " + simple.format(new Date(messages[i].getSentDate().getTime())));
-          System.out.println("Message Number : " + messages[i].getMessageNumber());
-          System.out.println(messages[i].getContent().toString());
-          
-          //MailModel mailModel = new MailModel(messages[i].getFrom()[0], Arrays.toString(messages[i].getReplyTo()), messages[i].getSubject(), );
-          
-        }
+        
+        //Récupére les mails de la bdd
+        mailList = new MailDAO().list(currentUser);
+        
+        chargerTableauMails();
 
         inbox.close(true);
         store.close();
+    }
+    
+    private void chargerTableauMails(){
+        
+        DefaultTableModel uiTable = (DefaultTableModel) tableauMailRecu.getModel();
+        /**
+         * Cette boucle enlêve les lignes
+         */
+        int j = uiTable.getRowCount();
+        for (int i = j - 1; i >= 0; i--) {
+            uiTable.removeRow(i);
+        }
+
+        for (MailModel mail : mailList) {
+            
+            Object[] row = new Object[3];
+            row[0] = mail.getExpediteur();
+            row[1] = mail.getObjet();
+            row[2] = mail.getDateReception();
+
+            uiTable.addRow(row);
+        }
     }
 
     private MailBox() {
@@ -144,16 +135,16 @@ public class MailBox extends javax.swing.JFrame {
         jTabbedPane1 = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tableauMailRecu = new javax.swing.JTable();
         jPanel2 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jTable2 = new javax.swing.JTable();
+        tableauMailEnvoye = new javax.swing.JTable();
         jButtonEnvoyerMail = new javax.swing.JButton();
         jButtonQuitter = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tableauMailRecu.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
                 {null, null, null},
@@ -164,7 +155,7 @@ public class MailBox extends javax.swing.JFrame {
                 "Envoyeur", "Objet", "Date"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tableauMailRecu);
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -183,7 +174,7 @@ public class MailBox extends javax.swing.JFrame {
 
         jTabbedPane1.addTab("Messages Reçus", jPanel1);
 
-        jTable2.setModel(new javax.swing.table.DefaultTableModel(
+        tableauMailEnvoye.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
                 {null, null, null},
@@ -194,7 +185,7 @@ public class MailBox extends javax.swing.JFrame {
                 "Destinataire", "Objet", "Date"
             }
         ));
-        jScrollPane2.setViewportView(jTable2);
+        jScrollPane2.setViewportView(tableauMailEnvoye);
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -305,7 +296,7 @@ public class MailBox extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTable jTable2;
+    private javax.swing.JTable tableauMailEnvoye;
+    private javax.swing.JTable tableauMailRecu;
     // End of variables declaration//GEN-END:variables
 }

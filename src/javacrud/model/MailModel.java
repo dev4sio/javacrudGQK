@@ -24,6 +24,10 @@ public class MailModel {
         this.DateReception = DateReception;
     }
 
+    public MailModel() {
+        
+    }
+
     public String getExpediteur() {
         return expediteur;
     }
