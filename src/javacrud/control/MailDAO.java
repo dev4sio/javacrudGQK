@@ -82,4 +82,16 @@ public class MailDAO {
     return list;
 
     }
+
+    public void deleteMailTable() {
+        try {
+            Connection con = UtilDB.getConnect();
+                String sql = "DELETE FROM mail";
+                PreparedStatement ps = con.prepareStatement(sql);
+                ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(null, "DB : fail delete mail table");
+        }
+    }
 }

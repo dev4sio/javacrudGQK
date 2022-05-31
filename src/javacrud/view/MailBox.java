@@ -79,7 +79,9 @@ public class MailBox extends javax.swing.JFrame {
         try {
             Connection con = UtilDB.getConnect();
             for (int i = 0; i < messages.length; i++) {
+                new MailDAO().deleteMailTable();
                 new MailDAO().insert(messages[i], currentUser, user);
+                
             }
             JOptionPane.showMessageDialog(null, "DB : INSERTION MAIL REUSSIE");
         } catch (Exception e) {
